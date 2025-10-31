@@ -86,4 +86,60 @@
     </div>
     {% endblock %}
 </div>
+<div id="emailVerifyPopup" class="verify-modal" style="display: none;">
+  <div class="verify-modal-content">
+    <h2 class="verify-title">{{ "Verify Email"|trans|sw_sanitize }}</h2>
+    <form id="verifyForm" autocomplete="off" onsubmit="return false;">
+      <label for="verifyCodeInput" class="verify-label">
+        {{ "Enter Verification Code"|trans|sw_sanitize }}<span style="color: #de5e32;">*</span>
+      </label>
+      <input type="text" id="verifyCodeInput" class="verify-input" placeholder="{{ "Verification Code"|trans|sw_sanitize }}" />
+      <div id="verifyErrorMsg" class="verify-error" style="display:none;">
+        {{ "Code is required!"|trans|sw_sanitize }}
+      </div>
+      <div class="verify-actions">
+        <button type="button" id="verifySubmitButton" class="verify-btn">{{ "Verify"|trans|sw_sanitize }}</button>
+        <button type="button" id="verifyCancelButton" class="verify-btn verify-btn-cancel">{{ "Cancel"|trans|sw_sanitize }}</button>
+      </div>
+    </form>
+  </div>
+</div>
+<style>
+.verify-modal {
+  position: fixed; z-index: 9999; left: 0; top: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.24); display: flex; align-items: center; justify-content: center;
+}
+.verify-modal-content {
+  background: #fff; padding: 2rem 2.5rem; border-radius: 10px; box-shadow: 0px 4px 22px rgba(0,0,0,0.13);
+  min-width: 340px; text-align: center;
+}
+.verify-title {
+  margin-bottom: 18px; color: #1f262e; font-weight: bold; font-size: 2rem;
+}
+.verify-label {
+  color: #2b3136; font-size: 20px; margin-bottom: 0.5rem; display: block; text-align: left;
+}
+.verify-input {
+  width: 100%; font-size: 1.2rem; padding: 6px 10px; margin-bottom: 7px; border: none; border-bottom: 1px solid #1f262e;
+  outline: none; margin-top: 5px;
+}
+.verify-input:focus {
+  border-bottom: 1px solid #1f262e;
+}
+.verify-error {
+  color: #d54839; font-size: 14px; margin-bottom: 12px; text-align: left;
+}
+.verify-actions {
+  margin-top: 16px; display: flex; gap: 16px; justify-content: center;
+}
+.verify-btn {
+  background: #0042a0; color: white; border: none; border-radius: 6px; padding: 0.6rem 1.6rem; font-size: 1.2rem; cursor: pointer;
+  transition: background 0.17s;
+}
+.verify-btn-cancel {
+    background: #ffffff;
+    color: #2b3136; 
+    border: 1px solid #1f262e;
+}
+</style>
 {% endblock %}

@@ -321,6 +321,68 @@ class CidaasHelperController extends StorefrontController
         }
     }
 
+    #[Route(path: '/cidaas/send/change/email/otp', name: 'cidaas.sendemailotp',  options: ['seo' => false], defaults: ['XmlHttpRequest' => true], methods: ['POST'])]
+    public function sendEmailOtp(Request $request, SalesChannelContext $context): Response
+    {
+        try {
+            $sub = $request->getSession()->get('sub');
+            $email = $request->get('email');
+
+            $res = $this->loginService->sendChangeEmailOtp($email, $sub, $context);
+
+            $responseData = json_decode(json_encode($res), true);
+
+            if (!$res || !array_key_exists('success', $responseData)) {
+                throw new \Exception($this->trans('account.errorOccured'));
+            }
+            if ($responseData['success'] === true) {
+                error_log("OTP sent successfully for email change to: $email for sub: $sub");
+            } else {
+                error_log("Failed to send OTP for email change to: $email for sub: $sub");
+                $error = $responseData['error'] ?? 'Unknown error';
+                $this->addFlash(self::DANGER, $this->trans('account.errorOccured') . $error);
+            }
+
+            return $this->json($res);
+        } catch (\Exception $e) {
+            return $this->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    #[Route(path: '/cidaas/verify/change/email', name: 'cidaas.verifyemail',  options: ['seo' => false], defaults: ['XmlHttpRequest' => true], methods: ['POST'])]
+    public function verifyEmailOtp(Request $request, SalesChannelContext $context): Response
+    {
+        try {
+            $sub = $request->getSession()->get('sub');
+            $email = $request->get('email');
+            $code = $request->get('verificationCode');
+
+            $res = $this->loginService->validateChangeEmail($email, $sub, $code, $context);
+
+            $responseData = json_decode(json_encode($res), true);
+
+            if (!$res || !array_key_exists('success', $responseData)) {
+                error_log("Email change verification failed for email: $email and sub: $sub");
+                throw new \Exception($this->trans('account.emailChangeNoSuccess'));
+            }
+            error_log("Response data for email change verification: " . json_encode($responseData));
+
+            if ($responseData['success'] === true) {
+                error_log("Email change verified successfully for email: $email and sub: $sub");
+                $this->addFlash(self::SUCCESS, $this->trans('account.emailChangeSuccess'));
+            } else {
+                error_log("2Email change verification failed for email: $email and sub: $sub");
+                $error = $responseData['error'] ?? 'Unknown error';
+                $this->addFlash(self::DANGER, $this->trans('account.errorOccured') . $error);
+            }
+
+            return $this->json($res);
+        } catch (\Exception $e) {
+            return $this->json(['success' => false, 'message' => $e->getMessage()], 400);
+        }
+    }
+
+
     #[Route(path: '/cidaas/change/email', name: 'cidaas.emailform', options: ['seo' => false], defaults: ['XmlHttpRequest' => true], methods: ['POST'])]
     public function emailForm(Request $request, SalesChannelContext $context): Response
     {
