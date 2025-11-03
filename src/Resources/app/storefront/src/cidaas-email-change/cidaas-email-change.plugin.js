@@ -15,6 +15,12 @@ export default class CidaasEmailChange extends Plugin {
 
         // OTP modal verify button handler
         $('#otpVerifyButton').on('click', this.handleOtpVerify.bind(this));
+        // In your init() function, add
+        $('#otpModal').on('hidden.bs.modal', () => {
+            // Show the confirm email section when OTP modal is closed (cancel or close btn)
+            $('#verifyThing').show();
+        });
+
     }
 
     handleSubmit(evt) {
@@ -59,24 +65,28 @@ export default class CidaasEmailChange extends Plugin {
                 ElementLoadingIndicatorUtil.remove(this.mailContainer);
                 if (res) {
                     $('#verifyThing').hide();
+                    $('#otpApiError').hide();
                     this.openOtpModal();
                 } else {
-                    $('#verifyThing').hide();
-                    alert(res && res.message ? res.message : 'Email verification initiation failed.');
+                    $('#otpApiError').text(res && res.message ? res.message : 'Email verification initiation failed.').show();
+                    $('#verifyThing').show();
                 }
             },
             () => {
                 ElementLoadingIndicatorUtil.remove(this.mailContainer);
-                alert('Network error. Please try again.');
+                $('#otpApiError').text('Network error. Please try again.').show();
+                $('#verifyThing').show();
             }
         );
     }
 
     openOtpModal() {
+        $('#otpApiError').hide();
         $('#otpModal').modal('show');
         $('#otpInput').val('');
         $('#otpInvalidFeedback').hide();
-    }
+      }
+      
 
     handleOtpVerify() {
         const code = $('#otpInput').val().trim();
@@ -99,9 +109,9 @@ export default class CidaasEmailChange extends Plugin {
             formData,
             (res) => {
                 ElementLoadingIndicatorUtil.remove(this.mailContainer);
+                console.log(res);
                 if (res) {
                     this.closeOtpModal();
-                    alert('Email change verified successfully.');
                     this.redirectProfilePath();
                 } else {
                     $('#otpInvalidFeedback').show();
@@ -109,7 +119,6 @@ export default class CidaasEmailChange extends Plugin {
             },
             () => {
                 ElementLoadingIndicatorUtil.remove(this.mailContainer);
-                alert('Network error. Please try again.');
             }
         );
     }

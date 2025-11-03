@@ -4,7 +4,11 @@
         "confirmChangesMessage" : "Bitte bestätigen Sie Ihre Änderungen:",
         "newEmailLabel":"Neue e-mail:",
         "confirmBtnLabel": "Bestätigen",
-        "addressSubmit" :"Submit"
+        "addressSubmit" :"Submit",
+        "errorOccured" : "Es ist ein Fehler aufgetreten:",
+        "verifyemail": "E-Mail verifizieren",
+        "enterOtpMessage": "Bitte geben Sie den OTP-Code ein, der an Ihre neue E-Mail-Adresse gesendet wurde.",
+        "otpInvalidMessage": "Der eingegebene OTP-Code ist ungültig. Bitte versuchen Sie es erneut."
 
     },
 

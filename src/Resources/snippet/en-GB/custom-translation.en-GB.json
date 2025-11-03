@@ -4,7 +4,14 @@
         "confirmChangesMessage" : "Please confirm your changes:",
         "newEmailLabel":"New email:",
         "confirmBtnLabel": "Confirm",
-        "addressSubmit" :"Submit"
+        "addressSubmit" :"Submit",
+        "errorOccured" : "An error occurred:",
+        "verifyemail": "Verify Email",
+        "enterOtpMessage": "Please enter the OTP code that was sent to your new email address.",
+        "otpInvalidMessage": "The OTP code entered is invalid. Please try again.",
+        "otpRequiredMessage": "OTP code is required.",
+        "cancelBtnLabel": "Cancel"
+
 
     },
     "guest_section": {
