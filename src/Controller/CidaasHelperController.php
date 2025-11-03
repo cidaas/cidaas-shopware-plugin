@@ -495,18 +495,12 @@ use Shopware\Core\Checkout\Customer\SalesChannel\AbstractChangeCustomerProfileRo
             $responseData = json_decode(json_encode($res), true);
 
             if (!$res || !array_key_exists('success', $responseData)) {
-                error_log("Email change verification failed for email: $email and sub: $sub");
                 throw new \Exception($this->trans('account.emailChangeNoSuccess'));
             }
-            error_log("Response data for email change verification: " . json_encode($responseData));
 
             if ($responseData['success'] === true) {
                 error_log("Email change verified successfully for email: $email and sub: $sub");
                 $this->addFlash(self::SUCCESS, $this->trans('account.emailChangeSuccess'));
-            } else {
-                error_log("2Email change verification failed for email: $email and sub: $sub");
-                $error = $responseData['error'] ?? 'Unknown error';
-                $this->addFlash(self::DANGER, $this->trans('account.errorOccured') . $error);
             }
 
             return $this->json($res);

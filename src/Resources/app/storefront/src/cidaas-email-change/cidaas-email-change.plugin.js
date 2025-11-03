@@ -63,10 +63,21 @@ export default class CidaasEmailChange extends Plugin {
             formData,
             (res) => {
                 ElementLoadingIndicatorUtil.remove(this.mailContainer);
-                if (res) {
+
+                let data = res;
+                if (typeof data === 'string') {
+                    try {
+                        data = JSON.parse(data);
+                    } catch (e) {
+                        console.error('Invalid JSON response:', data);
+                        return;
+                    }
+                }
+    
+                if (data.success) {
                     $('#verifyThing').hide();
                     $('#otpApiError').hide();
-                    this.openOtpModal();
+                    this.showVerificationModal();
                 } else {
                     $('#otpApiError').text(res && res.message ? res.message : 'Email verification initiation failed.').show();
                     $('#verifyThing').show();
@@ -74,13 +85,13 @@ export default class CidaasEmailChange extends Plugin {
             },
             () => {
                 ElementLoadingIndicatorUtil.remove(this.mailContainer);
-                $('#otpApiError').text('Network error. Please try again.').show();
+                $('#otpApiError').text('An unknown error occurred. Please try again.').show();
                 $('#verifyThing').show();
             }
         );
     }
 
-    openOtpModal() {
+    showVerificationModal() {
         $('#otpApiError').hide();
         $('#otpModal').modal('show');
         $('#otpInput').val('');
@@ -109,21 +120,33 @@ export default class CidaasEmailChange extends Plugin {
             formData,
             (res) => {
                 ElementLoadingIndicatorUtil.remove(this.mailContainer);
-                console.log(res);
-                if (res) {
-                    this.closeOtpModal();
+                let data = res;
+                if (typeof data === 'string') {
+                    try {
+                        data = JSON.parse(data);
+                    } catch (e) {
+                        console.error('Invalid JSON response:', data);
+                        return;
+                    }
+                }
+    
+                if (data.success) {
+                    this.closeVerificationModal();
                     this.redirectProfilePath();
                 } else {
-                    $('#otpInvalidFeedback').show();
+                    $('#otpApiError').text(res && res.message ? res.message : 'Code is incorrect!').show();
+                    $('#verifyThing').show();
                 }
             },
             () => {
                 ElementLoadingIndicatorUtil.remove(this.mailContainer);
+                $('#otpApiError').text('An unknown error occurred. Please try again.').show();
+                $('#verifyThing').show();
             }
         );
     }
 
-    closeOtpModal() {
+    closeVerificationModal() {
         $('#otpModal').modal('hide');
     }
 
