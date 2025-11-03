@@ -8,17 +8,24 @@ export default class CidaasEmailChange extends Plugin {
     init() {
         console.log('CidaasEmailChange loaded');
         this.client = new HttpClient();
-        const emailForm = document.getElementById('emailForm');
-        emailForm.addEventListener('submit', this.handleSubmit.bind(this));
+        this.emailForm = document.getElementById('emailForm');
         this.mailContainer = DomAccess.querySelector(document, 'div#accountMailContainer');
 
-        //  Added for OTP modal controls 
+        // OTP modal controls 
         this.verifyPopup = document.getElementById('emailVerifyPopup');
         this.verifyInput = document.getElementById('verifyCodeInput');
-        this.verifyButton = document.getElementById('verifySubmitButton');
+        this.verifyButton = document.getElementById('verifySubmitButton'); // "Verify" inside OTP popup
         this.cancelButton = document.getElementById('verifyCancelButton');
         this.errorMsg = document.getElementById('verifyErrorMsg');
+        this.confirmButton = document.getElementById('verifyButton'); // "Confirm" button for sending OTP
 
+        // Bind events once
+        if (this.emailForm) {
+            this.emailForm.addEventListener('submit', this.handleSubmit.bind(this));
+        }
+        if (this.confirmButton) {
+            this.confirmButton.addEventListener('click', this.handleVerify.bind(this));
+        }
         if (this.verifyButton) {
             this.verifyButton.addEventListener('click', this.handleOtpVerify.bind(this));
         }
@@ -32,41 +39,42 @@ export default class CidaasEmailChange extends Plugin {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
 
-    // Handle form submission
+    // Handle form submission (Email Change)
     handleSubmit(evt) {
         evt.preventDefault();
         console.log('Form submit JS triggered');
-        let email1 = document.getElementById('personalMail').value;
-        let email2 = document.getElementById('personalMailConfirmation').value;
+        let email1 = document.getElementById('personalMail').value.trim();
+        let email2 = document.getElementById('personalMailConfirmation').value.trim();
         if (email1 === email2) {
             document.getElementById('personalMailConfirmation').classList.remove('is-invalid');
             document.getElementById('invalidFeedback').style.display = 'none';
             this.changeEmail(email1);
-
         } else {
             document.getElementById('invalidFeedback').style.display = 'block';
             document.getElementById('personalMailConfirmation').classList.add('is-invalid');
         }
     }
 
-    // Change email process
-    async changeEmail(email1) {
-        this.email = email1
-        document.getElementById('emailForm').style.display = 'none';
+    // Change email process, show confirm step
+    changeEmail(email1) {
+        this.email = email1;
+        this.emailForm.style.display = 'none';
         document.getElementById('emailVerifySpan').textContent = email1;
         document.getElementById('verifyThing').style.display = 'block';
-        document.getElementById('verifyButton').addEventListener('click', this.handleVerify.bind(this));
     }
 
-
-    // Handle verify button click
+    // Handle Confirm click (Send OTP to new email)
     handleVerify() {
-        //  Call API to SEND verification code to email1 
-        ElementLoadingIndicatorUtil.create(this.mailContainer);
+        // Loader on confirm/verification section, not full page
+        ElementLoadingIndicatorUtil.create(this.verifyPopup);
+        this.setVerificationControlsEnabled(false);
+
         this.client.post('/cidaas/send/change/email/otp', JSON.stringify({
             email: this.email
         }), (res) => {
-            ElementLoadingIndicatorUtil.remove(this.mailContainer);
+            ElementLoadingIndicatorUtil.remove(this.verifyPopup);
+            this.setVerificationControlsEnabled(true);
+
             let data = res;
             if (typeof data === 'string') {
                 try {
@@ -76,11 +84,11 @@ export default class CidaasEmailChange extends Plugin {
                     return;
                 }
             }
-            //On success, show OTP modal 
             if (data.success) {
                 this.showVerificationPopup();
             } else {
-                console.log(res.message || 'Failed to send verification code. Try again.');
+                this.errorMsg.textContent = data.message || 'Failed to send verification code. Try again.';
+                this.errorMsg.style.display = 'block';
             }
         });
     }
@@ -91,8 +99,10 @@ export default class CidaasEmailChange extends Plugin {
         if (this.verifyInput) this.verifyInput.value = '';
         if (this.errorMsg) this.errorMsg.style.display = 'none';
         if (this.verifyPopup) this.verifyPopup.style.display = 'flex';
+        this.setVerificationControlsEnabled(true);
     }
-    // Handle OTP verification
+
+    // Handle OTP verification inside popup
     handleOtpVerify() {
         const code = this.verifyInput.value.trim();
         if (!code) {
@@ -101,14 +111,17 @@ export default class CidaasEmailChange extends Plugin {
             return;
         }
         this.errorMsg.style.display = 'none';
-        ElementLoadingIndicatorUtil.create(this.mailContainer);
-        //Call API to validate OTP
+
+        ElementLoadingIndicatorUtil.create(this.verifyPopup);
+        this.setVerificationControlsEnabled(false);
+
         this.client.post('/cidaas/verify/change/email', JSON.stringify({
             email: this.email,
             verificationCode: code
         }), (res) => {
-            console.log('OTP verification response:', res);
-            ElementLoadingIndicatorUtil.remove(this.mailContainer);
+            ElementLoadingIndicatorUtil.remove(this.verifyPopup);
+            this.setVerificationControlsEnabled(true);
+
             let data = res;
             if (typeof data === 'string') {
                 try {
@@ -118,38 +131,33 @@ export default class CidaasEmailChange extends Plugin {
                     return;
                 }
             }
-            //On success, show OTP modal 
             if (data.success) {
-               //  On success, call original email change logic 
-               this.verifyPopup.style.display = 'none';
-               this.redirectProfilePath();
+                this.verifyPopup.style.display = 'none';
+                this.redirectProfilePath();
             } else {
-                this.errorMsg.textContent = res.message || "Code is incorrect!";
+                this.errorMsg.textContent = data.message || "Code is incorrect!";
                 this.errorMsg.style.display = 'block';
             }
-
         });
     }
 
-    // Handle OTP cancel
+    // Handle OTP modal cancel
     handleOtpCancel() {
         if (this.verifyPopup) this.verifyPopup.style.display = 'none';
         if (this.verifyInput) this.verifyInput.value = '';
         if (this.errorMsg) this.errorMsg.style.display = 'none';
+        this.setVerificationControlsEnabled(true);
     }
 
-    // //  change email fucntion has been moved this path /cidaas/verify/change/email
-    // changeEmailAfterVerification() {
-    //     ElementLoadingIndicatorUtil.create(this.mailContainer);
-    //     this.client.post('/cidaas/change/email', JSON.stringify({
-    //         email: this.email
-    //     }), (res) => {
-    //         ElementLoadingIndicatorUtil.remove(this.mailContainer);
-    //         this.redirectProfilePath();
-    //     });
-    // }
+    // Enable/disable controls in OTP popup
+    setVerificationControlsEnabled(enabled) {
+        if (this.verifyButton) this.verifyButton.disabled = !enabled;
+        if (this.cancelButton) this.cancelButton.disabled = !enabled;
+        if (this.verifyInput) this.verifyInput.disabled = !enabled;
+        if (this.confirmButton) this.confirmButton.disabled = !enabled;
+    }
 
-    // Redirect to profile page
+    // Redirect after success
     redirectProfilePath() {
         const baseUrl = `${window.location.protocol}//${window.location.host}`;
         const path = window.location.pathname;
