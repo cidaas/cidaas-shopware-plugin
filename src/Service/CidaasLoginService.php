@@ -395,6 +395,66 @@ class CidaasLoginService
         return $this->cidaasUrl;
     }
 
+    // Send OTP to new email for change email process
+    public function sendChangeEmailOtp($email, $sub, $context)
+    {
+        $client = new Client();
+        $accessTokenObj = $this->getAccessToken();
+        $accessToken = $accessTokenObj->token;
+        $url = $this->cidaasUrl . '/useractions-srv/communication/medium/' . $sub . '?action=initiate';
+        try {
+            $response = $client->put($url, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $accessToken,
+                    'Content-Type'  => 'application/json',
+                ],
+                'json' => [
+                    'medium'   => 'email',
+                    'value'    => $email,
+                    'sub'      => $sub,
+                    'provider' => 'self',
+            ],
+            ]);
+            return json_decode($response->getBody()->getContents());
+        } catch (ClientException $e) {
+            return json_decode($e->getResponse()->getBody()->getContents());
+        }
+    }
+
+    // Verify OTP and change email in cidaas and shopware
+    public function validateChangeEmail($email, $sub, $code, $context)
+    {
+        $client = new Client();
+        $customer = $this->getCustomerBySub($sub, $context);
+        $accessTokenObj = $this->getAccessToken();
+        $accessToken = $accessTokenObj->token;
+        $url = $this->cidaasUrl . '/useractions-srv/communication/medium/' . $sub . '?action=validate';
+        try {
+            $response = $client->put($url, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $accessToken,
+                    'Content-Type'  => 'application/json',
+                ],
+                'json' => [
+                    'medium'   => 'email',
+                    'value'    => $email,
+                    'sub'      => $sub,
+                    'provider' => 'self',
+                    'code'     => $code,
+            ],
+            ]);
+
+            $this->customerRepo->update([[
+                'id' => $customer->getId(),
+                'email' => $email,
+            ]], $context->getContext());
+
+            return json_decode($response->getBody()->getContents());
+        } catch (ClientException $e) {
+            return json_decode($e->getResponse()->getBody()->getContents());
+        }
+    }
+
     public function changeEmail($email, $sub, $context)
     {
         $client = new Client();

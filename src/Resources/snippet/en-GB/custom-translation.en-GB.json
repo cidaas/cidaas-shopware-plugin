@@ -11,7 +11,12 @@
         "updateProfileError" :"Failed to update profile.",
         "updateBillingAddress" : "Default billing address updated successfully.",
         "billingAddressUpdateError": "Failed to update billing address.",
-        "errorOccured" : "An error occurred:"
+        "errorOccured" : "An error occurred:",
+        "verifyemail": "Verify Email",
+        "enterOtpMessage": "Enter verification code sent to your email address.",
+        "otpInvalidMessage": "The OTP code entered is invalid. Please try again.",
+        "otpRequiredMessage": "code is required.",
+        "cancelBtnLabel": "Cancel"
 
     },
     "guest_section": {

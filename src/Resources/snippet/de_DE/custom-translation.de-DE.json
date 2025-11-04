@@ -11,8 +11,12 @@
         "updateProfileError" :"Profil konnte nicht aktualisiert werden.",
         "updateBillingAddress" : "Standard-Rechnungsadresse erfolgreich aktualisiert.",
         "billingAddressUpdateError": "Die Rechnungsadresse konnte nicht aktualisiert werden.",
-        "errorOccured" : "Es ist ein Fehler aufgetreten:"
-
+        "errorOccured" : "Es ist ein Fehler aufgetreten:",
+        "verifyemail": "E-Mail verifizieren",
+        "enterOtpMessage": "Geben Sie den Bestätigungscode ein, der an Ihre E-Mail-Adresse gesendet wurde.",
+        "otpInvalidMessage": "Der eingegebene OTP-Code ist ungültig. Bitte versuchen Sie es erneut.",
+        "otpRequiredMessage": "Code ist erforderlich.",
+        "cancelBtnLabel": "Abbrechen"
     },
 
     "guest_section" : {
