@@ -442,7 +442,6 @@ use Shopware\Core\Checkout\Customer\SalesChannel\AbstractChangeCustomerProfileRo
                 $error = $responseData['error']['error'] ?? $responseData['error'] ?? 'Unknown error';
                 $this->addFlash(self::DANGER, $this->trans('account.emailChangeNoSuccess') . $error);
             }
-
             return $this->json($res);
         } catch (\Exception $e) {
             $this->addFlash(self::DANGER, $this->trans('account.emailChangeNoSuccess') . $e->getMessage());
@@ -450,6 +449,66 @@ use Shopware\Core\Checkout\Customer\SalesChannel\AbstractChangeCustomerProfileRo
         }
 
     }
+
+    /**
+     * @Route("/cidaas/send/change/email/otp", name="cidaas.sendemailotp", methods={"POST"}, options={"seo"="false"}, defaults={"XmlHttpRequest"=true})
+     */
+    public function sendEmailOtp(Request $request, SalesChannelContext $context): Response
+    {
+        try {
+            $sub = $request->getSession()->get('sub');
+            $email = $request->get('email');
+
+            $res = $this->loginService->sendChangeEmailOtp($email, $sub, $context);
+
+            $responseData = json_decode(json_encode($res), true);
+
+            if (!$res || !array_key_exists('success', $responseData)) {
+                throw new \Exception($this->trans('account.errorOccured'));
+            }
+            if ($responseData['success'] === true) {
+                error_log("OTP sent successfully for email change to: $email for sub: $sub");
+            } else {
+                error_log("Failed to send OTP for email change to: $email for sub: $sub");
+                $error = $responseData['error'] ?? 'Unknown error';
+                $this->addFlash(self::DANGER, $this->trans('account.errorOccured') . $error);
+            }
+
+            return $this->json($res);
+        } catch (\Exception $e) {
+            return $this->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * @Route("/cidaas/verify/change/email", name="cidaas.verifyemail", methods={"POST"}, options={"seo"="false"}, defaults={"XmlHttpRequest"=true})
+     */
+    public function verifyEmailOtp(Request $request, SalesChannelContext $context): Response
+    {
+        try {
+            $sub = $request->getSession()->get('sub');
+            $email = $request->get('email');
+            $code = $request->get('verificationCode');
+
+            $res = $this->loginService->validateChangeEmail($email, $sub, $code, $context);
+
+            $responseData = json_decode(json_encode($res), true);
+
+            if (!$res || !array_key_exists('success', $responseData)) {
+                throw new \Exception($this->trans('account.emailChangeNoSuccess'));
+            }
+
+            if ($responseData['success'] === true) {
+                error_log("Email change verified successfully for email: $email and sub: $sub");
+                $this->addFlash(self::SUCCESS, $this->trans('account.emailChangeSuccess'));
+            }
+
+            return $this->json($res);
+        } catch (\Exception $e) {
+            return $this->json(['success' => false, 'message' => $e->getMessage()], 400);
+        }
+    }
+
 
      /**
      * @Route("/cidaas/update-profile", name="frontend.account.profile.save", methods={"POST"}, options={"seo"="false"}, defaults={"_loginRequired"=true})

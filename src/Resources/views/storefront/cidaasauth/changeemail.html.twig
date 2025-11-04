@@ -2,7 +2,8 @@
 <div data-cidaas-email-change data-cidaas-email-change-options="{{
            {
                 'sub': context.customer.customFields.sub,
-                'csrf': sw_csrf('cidaas.emailform', {'mode': 'token'})
+                'csrf': sw_csrf('cidaas.sendemailotp', {'mode': 'token'}),
+                'csrfverify': sw_csrf('cidaas.verifyemail', {'mode': 'token'})
             }|json_encode
         }}">
 </div>
@@ -93,4 +94,27 @@
     </div>
     {% endblock %}
 </div>
+<div class="modal fade" id="otpModal" tabindex="-1" role="dialog" aria-labelledby="otpModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="otpModalLabel">{{ "account.verifyemail"|trans|sw_sanitize }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="{{ "general.default.close"|trans|sw_sanitize }}">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <p>{{ "account.enterOtpMessage"|trans|sw_sanitize }}</p>
+          <input type="text" id="otpInput" class="form-control" maxlength="6" autocomplete="one-time-code" />
+          <div class="invalid-feedback" id="otpInvalidFeedback" style="display:none;">{{"account.otpRequiredMessage"|trans|sw_sanitize }}</div>
+          <div id="otpApiError" class="text-danger mb-2" style="display:none;"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{"account.cancelBtnLabel"|trans|sw_sanitize }}</button>
+        <button type="button" class="btn btn-primary" id="otpVerifyButton">{{ "account.confirmBtnLabel"|trans|sw_sanitize }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
