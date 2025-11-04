@@ -88,18 +88,18 @@
 </div>
 <div id="emailVerifyPopup" class="verify-modal" style="display: none;">
   <div class="verify-modal-content">
-    <h2 class="verify-title">{{ "Verify Email"|trans|sw_sanitize }}</h2>
+    <h2 class="verify-title">{{ "account.verifyemail"|trans|sw_sanitize }}</h2>
     <form id="verifyForm" autocomplete="off" onsubmit="return false;">
       <label for="verifyCodeInput" class="verify-label">
-        {{ "Enter Verification Code"|trans|sw_sanitize }}<span style="color: #de5e32;">*</span>
+        {{ "account.enterOtpMessage"|trans|sw_sanitize }}<span style="color: #de5e32;">*</span>
       </label>
       <input type="text" id="verifyCodeInput" class="verify-input" placeholder="{{ "Verification Code"|trans|sw_sanitize }}" />
       <div id="verifyErrorMsg" class="verify-error" style="display:none;">
-        {{ "Code is required!"|trans|sw_sanitize }}
+        {{ "account.otpRequiredMessage"|trans|sw_sanitize }}
       </div>
       <div class="verify-actions">
-        <button type="button" id="verifySubmitButton" class="verify-btn">{{ "Verify"|trans|sw_sanitize }}</button>
-        <button type="button" id="verifyCancelButton" class="verify-btn verify-btn-cancel">{{ "Cancel"|trans|sw_sanitize }}</button>
+        <button type="button" id="verifySubmitButton" class="verify-btn">{{ "account.confirmBtnLabel"|trans|sw_sanitize }}</button>
+        <button type="button" id="verifyCancelButton" class="verify-btn verify-btn-cancel">{{ "account.cancelBtnLabel"|trans|sw_sanitize }}</button>
       </div>
     </form>
   </div>
