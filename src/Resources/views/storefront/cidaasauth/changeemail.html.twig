@@ -46,7 +46,7 @@
                 {% endblock %}
                 {% block page_change_email_email_mismatch %}
                 <div class="invalid-feedback" style="display:none" id="invalidFeedback">{{
-                    "account.emailMismatchMessage"|trans|sw_sanitize }}
+                    "account.confirmEmail"|trans|sw_sanitize }}
                 </div>
                 {% endblock %}
             </div>
@@ -94,8 +94,11 @@
         {{ "account.enterOtpMessage"|trans|sw_sanitize }}<span style="color: #de5e32;">*</span>
       </label>
       <input type="text" id="verifyCodeInput" class="verify-input" placeholder="{{ "Verification Code"|trans|sw_sanitize }}" />
-      <div id="verifyErrorMsg" class="verify-error" style="display:none;">
+      <div id="requiredErrorMsg" class="verify-error" style="display:none;">
         {{ "account.otpRequiredMessage"|trans|sw_sanitize }}
+      </div>
+      <div id="verifyErrorMsg" class="verify-error" style="display:none;">
+        {{ "account.otpVerifyMessage"|trans|sw_sanitize }}
       </div>
       <div class="verify-actions">
         <button type="button" id="verifySubmitButton" class="verify-btn">{{ "account.confirmBtnLabel"|trans|sw_sanitize }}</button>

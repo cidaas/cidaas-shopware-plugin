@@ -4,7 +4,7 @@
         "loginError": "Fehler beim Login/Registrieren!",
         "confirmChangeLabel" : "Änderung bestätigen",
         "confirmChangesMessage" : "Bitte bestätigen Sie Ihre Änderungen:",
-        "newEmailLabel":"Neue e-mail:",
+        "newEmailLabel":"Neue E-Mail-Adresse:",
         "confirmBtnLabel": "Bestätigen",
         "addressSubmit" :"Submit",
         "updateProfile" :"Profil erfolgreich aktualisiert.",
@@ -13,9 +13,11 @@
         "billingAddressUpdateError": "Die Rechnungsadresse konnte nicht aktualisiert werden.",
         "errorOccured" : "Es ist ein Fehler aufgetreten:",
         "verifyemail": "E-Mail verifizieren",
-        "enterOtpMessage": "Geben Sie den Bestätigungscode ein, der an Ihre E-Mail-Adresse gesendet wurde.",
-        "otpInvalidMessage": "Der eingegebene OTP-Code ist ungültig. Bitte versuchen Sie es erneut.",
-        "otpRequiredMessage": "Code ist erforderlich.",
+        "enterOtpMessage": "Geben Sie den an Ihre E-Mail-Adresse gesendeten Bestätigungscode ein.",
+        "otpInvalidMessage": "Der eingegebene Bestätigungscode ist ungültig. Bitte versuchen Sie es erneut.",
+        "otpRequiredMessage": "Ein Bestätigungscode ist erforderlich.",
+        "otpVerifyMessage": "Der Bestätigungscode ist falsch.",
+        "confirmEmail": "Die Bestätigungs-E-Mail stimmt nicht überein.",
         "cancelBtnLabel": "Abbrechen"
     },
 

@@ -16,7 +16,8 @@ export default class CidaasEmailChange extends Plugin {
         this.verifyInput = document.getElementById('verifyCodeInput');
         this.verifyButton = document.getElementById('verifySubmitButton'); // "Verify" inside OTP popup
         this.cancelButton = document.getElementById('verifyCancelButton');
-        this.errorMsg = document.getElementById('verifyErrorMsg');
+        this.errorMsg = document.getElementById('requiredErrorMsg');
+        this.verifyErrorMsg = document.getElementById('verifyErrorMsg');
         this.confirmButton = document.getElementById('verifyButton'); // "Confirm" button for sending OTP
 
         // Bind events once
@@ -98,6 +99,7 @@ export default class CidaasEmailChange extends Plugin {
         // Show OTP entry modal
         if (this.verifyInput) this.verifyInput.value = '';
         if (this.errorMsg) this.errorMsg.style.display = 'none';
+        if (this.verifyErrorMsg) this.verifyErrorMsg.style.display = 'none';
         if (this.verifyPopup) this.verifyPopup.style.display = 'flex';
         this.setVerificationControlsEnabled(true);
     }
@@ -106,7 +108,6 @@ export default class CidaasEmailChange extends Plugin {
     handleOtpVerify() {
         const code = this.verifyInput.value.trim();
         if (!code) {
-            this.errorMsg.textContent = "Code is required!";
             this.errorMsg.style.display = 'block';
             return;
         }
@@ -135,8 +136,7 @@ export default class CidaasEmailChange extends Plugin {
                 this.verifyPopup.style.display = 'none';
                 this.redirectProfilePath();
             } else {
-                this.errorMsg.textContent = data.message || "Code is incorrect!";
-                this.errorMsg.style.display = 'block';
+                this.verifyErrorMsg.style.display = 'block';
             }
         });
     }
@@ -146,7 +146,9 @@ export default class CidaasEmailChange extends Plugin {
         if (this.verifyPopup) this.verifyPopup.style.display = 'none';
         if (this.verifyInput) this.verifyInput.value = '';
         if (this.errorMsg) this.errorMsg.style.display = 'none';
+        if (this.verifyErrorMsg) this.verifyErrorMsg.style.display = 'none';
         this.setVerificationControlsEnabled(true);
+        this.redirectProfilePath();
     }
 
     // Enable/disable controls in OTP popup
