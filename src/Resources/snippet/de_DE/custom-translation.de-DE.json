@@ -13,6 +13,7 @@
         "billingAddressUpdateError": "Die Rechnungsadresse konnte nicht aktualisiert werden.",
         "errorOccured" : "Es ist ein Fehler aufgetreten:",
         "verifyemail": "E-Mail verifizieren",
+        "enterVerificationCode": "Bestätigungscode eingeben",
         "enterOtpMessage": "Geben Sie den an Ihre E-Mail-Adresse gesendeten Bestätigungscode ein.",
         "otpInvalidMessage": "Der eingegebene Bestätigungscode ist ungültig. Bitte versuchen Sie es erneut.",
         "otpRequiredMessage": "Ein Bestätigungscode ist erforderlich.",

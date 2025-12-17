@@ -13,6 +13,7 @@
         "billingAddressUpdateError": "Failed to update billing address.",
         "errorOccured" : "An error occurred:",
         "verifyemail": "Verify Email",
+        "enterVerificationCode": "Enter Verification Code",
         "enterOtpMessage": "Enter the verification code sent to your email address.",
         "otpInvalidMessage": "The verification code entered is invalid. Please try again",
         "otpRequiredMessage": "Verification code is required.",

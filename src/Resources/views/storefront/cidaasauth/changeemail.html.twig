@@ -93,7 +93,7 @@
       <label for="verifyCodeInput" class="verify-label">
         {{ "account.enterOtpMessage"|trans|sw_sanitize }}<span style="color: #de5e32;">*</span>
       </label>
-      <input type="text" id="verifyCodeInput" class="verify-input" placeholder="{{ "Verification Code"|trans|sw_sanitize }}" />
+      <input type="text" id="verifyCodeInput" class="verify-input" placeholder="{{ "account.enterVerificationCode"|trans|sw_sanitize }}" />
       <div id="requiredErrorMsg" class="verify-error" style="display:none;">
         {{ "account.otpRequiredMessage"|trans|sw_sanitize }}
       </div>
@@ -123,7 +123,7 @@
   color: #2b3136; font-size: 20px; margin-bottom: 0.5rem; display: block; text-align: left;
 }
 .verify-input {
-  width: 100%; font-size: 1.2rem; padding: 6px 10px; margin-bottom: 7px; border: none; border-bottom: 1px solid #1f262e;
+  width: 100%; font-size: 14px; padding: 6px 10px; margin-bottom: 7px; border: none; border-bottom: 1px solid #1f262e;
   outline: none; margin-top: 5px;
 }
 .verify-input:focus {
