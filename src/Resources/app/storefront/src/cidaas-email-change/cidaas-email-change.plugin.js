@@ -19,6 +19,7 @@ export default class CidaasEmailChange extends Plugin {
         this.errorMsg = document.getElementById('requiredErrorMsg');
         this.verifyErrorMsg = document.getElementById('verifyErrorMsg');
         this.confirmButton = document.getElementById('verifyButton'); // "Confirm" button for sending OTP
+        this.cancelChangesButton = document.getElementById('cancelButton'); // "Cancel"
 
         // Bind events once
         if (this.emailForm) {
@@ -33,6 +34,15 @@ export default class CidaasEmailChange extends Plugin {
         if (this.cancelButton) {
             this.cancelButton.addEventListener('click', this.handleOtpCancel.bind(this));
         }
+        if (this.cancelChangesButton) {
+            this.cancelChangesButton.addEventListener('click', this.handleCancelChanges.bind(this));
+        }
+    }
+    // Handle Cancel Changes click
+    handleCancelChanges() {
+         this.emailForm.style.display = 'block';
+         document.getElementById('verifyThing').style.display = 'none';
+         document.getElementById('emailValidateErrorSpan').style.display = 'none';
     }
 
     // Utility sleep function
@@ -77,6 +87,7 @@ export default class CidaasEmailChange extends Plugin {
             this.setVerificationControlsEnabled(true);
 
             let data = res;
+            // console.log('Response from send/change/email/otp:', JSON.parse(data));
             if (typeof data === 'string') {
                 try {
                     data = JSON.parse(data);
@@ -85,11 +96,10 @@ export default class CidaasEmailChange extends Plugin {
                     return;
                 }
             }
-            if (data.success) {
+            if (data.success === true && data.status === 200) {
                 this.showVerificationPopup();
             } else {
-                this.errorMsg.textContent = data.message || 'Failed to send verification code. Try again.';
-                this.errorMsg.style.display = 'block';
+                document.getElementById('emailValidateErrorSpan').textContent = data.error || 'An error occurred while sending the verification code.';
             }
         });
     }
@@ -101,6 +111,7 @@ export default class CidaasEmailChange extends Plugin {
         if (this.errorMsg) this.errorMsg.style.display = 'none';
         if (this.verifyErrorMsg) this.verifyErrorMsg.style.display = 'none';
         if (this.verifyPopup) this.verifyPopup.style.display = 'flex';
+        document.getElementById('emailValidateErrorSpan').style.display = 'none';
         this.setVerificationControlsEnabled(true);
     }
 
@@ -147,6 +158,7 @@ export default class CidaasEmailChange extends Plugin {
         if (this.verifyInput) this.verifyInput.value = '';
         if (this.errorMsg) this.errorMsg.style.display = 'none';
         if (this.verifyErrorMsg) this.verifyErrorMsg.style.display = 'none';
+        document.getElementById('emailValidateErrorSpan').style.display = 'none';
         this.setVerificationControlsEnabled(true);
         this.redirectProfilePath();
     }

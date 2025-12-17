@@ -75,12 +75,15 @@
                 {{ "account.newEmailLabel"|trans|sw_sanitize }} <span id="emailVerifySpan"
                     style="font-weight: 700; color: #e30613;"></span>
             </div>
+            <div><span id="emailValidateErrorSpan" style="font-weight: 700,font-size: 10px; color: #e30613;"></span></div>
         </div>
         <br />
         <div class="row">
             <div class="col">
                 <button type="button" class="btn btn-primary" id="verifyButton">{{
-                    "account.confirmBtnLabel"|trans|sw_sanitize }}</button>
+                  "account.confirmBtnLabel"|trans|sw_sanitize }}</button>
+                  <button type="button" class="btn btn-secondary" id="cancelButton">{{
+                  "account.cancelBtnLabel"|trans|sw_sanitize }}</button>
             </div>
         </div>
     </div>
