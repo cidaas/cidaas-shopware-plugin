@@ -19,6 +19,7 @@
         "otpRequiredMessage": "Verification code is required.",
         "otpVerifyMessage": "Verification code is incorrect.",
         "confirmEmail": "Confirmation Email does not match.",
+        "emailSameCurrentError": "Please enter a different email than your current one.",
         "cancelBtnLabel": "Cancel"
 
     },

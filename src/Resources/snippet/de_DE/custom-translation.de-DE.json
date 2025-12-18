@@ -19,6 +19,7 @@
         "otpRequiredMessage": "Ein Bestätigungscode ist erforderlich.",
         "otpVerifyMessage": "Der Bestätigungscode ist falsch.",
         "confirmEmail": "Die Bestätigungs-E-Mail stimmt nicht überein.",
+        "emailSameCurrentError": "Bitte geben Sie eine andere E-Mail-Adresse als Ihre aktuelle ein.",
         "cancelBtnLabel": "Abbrechen"
     },
 

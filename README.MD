@@ -60,7 +60,7 @@ Salutation
 : field name `salutation`
 
 country
-: field name `country`
+: field name `billing_address_country`
 
 Street
 : field name `billing_address_street`
@@ -186,9 +186,10 @@ This field is used to confirm the password entered by the user during the regist
 - Definition: This field captures the salutation or title (e.g., Mr., Mrs., Dr.) associated with the customer.
 - Purpose: Adds a personal touch to communications and is often used for formal addressing in documentation.
 
-**country**:
+**billing_address_country**:
 - Definition: This field captures the customer's country information.
 - Purpose: Necessary for determining applicable taxes, shipping costs, and complying with regional regulations.
+- In Cidaas: The field was configured in a way that expects this format (key in lowercase, value in uppercase).
 
 **billing_address_zipcode**:
 - Definition: This field captures the postal code or ZIP code of the customer's billing address.
