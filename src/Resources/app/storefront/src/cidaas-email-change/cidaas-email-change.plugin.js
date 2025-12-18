@@ -10,14 +10,15 @@ export default class CidaasEmailChange extends Plugin {
         this.client = new HttpClient();
         this.emailForm = document.getElementById('emailForm');
         this.mailContainer = DomAccess.querySelector(document, 'div#accountMailContainer');
-
         // OTP modal controls 
         this.verifyPopup = document.getElementById('emailVerifyPopup');
         this.verifyInput = document.getElementById('verifyCodeInput');
         this.verifyButton = document.getElementById('verifySubmitButton'); // "Verify" inside OTP popup
         this.cancelButton = document.getElementById('verifyCancelButton');
-        this.errorMsg = document.getElementById('verifyErrorMsg');
+        this.errorMsg = document.getElementById('requiredErrorMsg');
+        this.verifyErrorMsg = document.getElementById('verifyErrorMsg');
         this.confirmButton = document.getElementById('verifyButton'); // "Confirm" button for sending OTP
+        this.cancelChangesButton = document.getElementById('cancelButton'); // "Cancel"
 
         // Bind events once
         if (this.emailForm) {
@@ -32,6 +33,47 @@ export default class CidaasEmailChange extends Plugin {
         if (this.cancelButton) {
             this.cancelButton.addEventListener('click', this.handleOtpCancel.bind(this));
         }
+        if (this.cancelChangesButton) {
+            this.cancelChangesButton.addEventListener('click', this.handleCancelChanges.bind(this));
+        }
+        const emailInput = document.getElementById('personalMail');
+        if (emailInput) {
+            emailInput.addEventListener('input', this.validateCurrentEmail.bind(this));
+            emailInput.addEventListener('blur', this.validateCurrentEmail.bind(this));
+        }
+    }
+  // Validate that new email is different from current email   
+    validateCurrentEmail() {
+        const emailInput = document.getElementById('personalMail');
+        const currentUserEmail = document.getElementById('currentUserEmail')?.value || '';
+        const currentEmailError = document.getElementById('currentEmailError');
+
+        if (!emailInput || !currentEmailError) {
+            return true;
+        }
+
+        const value = emailInput.value.trim();
+        // 1) Same as current email → show error
+        if (value && value === currentUserEmail) {
+            currentEmailError.style.display = 'block';
+            emailInput.classList.add('is-invalid');
+            return false;
+        }
+
+        // 2) Value changed → hide "same email" error
+        currentEmailError.style.display = 'none';
+        emailInput.classList.remove('is-invalid');
+
+        return true;
+    }
+
+
+    // Handle Cancel Changes click
+    handleCancelChanges() {
+         this.emailForm.style.display = 'block';
+         document.getElementById('verifyThing').style.display = 'none';
+         document.getElementById('emailValidateErrorSpan').style.display = 'none';
+         document.getElementById('currentEmailError').style.display = 'none';
     }
 
     // Utility sleep function
@@ -43,6 +85,9 @@ export default class CidaasEmailChange extends Plugin {
     handleSubmit(evt) {
         evt.preventDefault();
         console.log('Form submit JS triggered');
+        if (!this.validateCurrentEmail()) {
+          return;
+        }
         let email1 = document.getElementById('personalMail').value.trim();
         let email2 = document.getElementById('personalMailConfirmation').value.trim();
         if (email1 === email2) {
@@ -59,6 +104,7 @@ export default class CidaasEmailChange extends Plugin {
     changeEmail(email1) {
         this.email = email1;
         this.emailForm.style.display = 'none';
+        document.getElementById('currentEmailError').style.display = 'none';
         document.getElementById('emailVerifySpan').textContent = email1;
         document.getElementById('verifyThing').style.display = 'block';
     }
@@ -76,6 +122,7 @@ export default class CidaasEmailChange extends Plugin {
             this.setVerificationControlsEnabled(true);
 
             let data = res;
+            // console.log('Response from send/change/email/otp:', JSON.parse(data));
             if (typeof data === 'string') {
                 try {
                     data = JSON.parse(data);
@@ -84,11 +131,10 @@ export default class CidaasEmailChange extends Plugin {
                     return;
                 }
             }
-            if (data.success) {
+            if (data.success === true && data.status === 200) {
                 this.showVerificationPopup();
             } else {
-                this.errorMsg.textContent = data.message || 'Failed to send verification code. Try again.';
-                this.errorMsg.style.display = 'block';
+                document.getElementById('emailValidateErrorSpan').textContent = data.error || 'An error occurred while sending the verification code.';
             }
         });
     }
@@ -98,7 +144,9 @@ export default class CidaasEmailChange extends Plugin {
         // Show OTP entry modal
         if (this.verifyInput) this.verifyInput.value = '';
         if (this.errorMsg) this.errorMsg.style.display = 'none';
+        if (this.verifyErrorMsg) this.verifyErrorMsg.style.display = 'none';
         if (this.verifyPopup) this.verifyPopup.style.display = 'flex';
+        document.getElementById('emailValidateErrorSpan').style.display = 'none';
         this.setVerificationControlsEnabled(true);
     }
 
@@ -106,7 +154,6 @@ export default class CidaasEmailChange extends Plugin {
     handleOtpVerify() {
         const code = this.verifyInput.value.trim();
         if (!code) {
-            this.errorMsg.textContent = "Code is required!";
             this.errorMsg.style.display = 'block';
             return;
         }
@@ -135,8 +182,7 @@ export default class CidaasEmailChange extends Plugin {
                 this.verifyPopup.style.display = 'none';
                 this.redirectProfilePath();
             } else {
-                this.errorMsg.textContent = data.message || "Code is incorrect!";
-                this.errorMsg.style.display = 'block';
+                this.verifyErrorMsg.style.display = 'block';
             }
         });
     }
@@ -146,7 +192,11 @@ export default class CidaasEmailChange extends Plugin {
         if (this.verifyPopup) this.verifyPopup.style.display = 'none';
         if (this.verifyInput) this.verifyInput.value = '';
         if (this.errorMsg) this.errorMsg.style.display = 'none';
+        if (this.verifyErrorMsg) this.verifyErrorMsg.style.display = 'none';
+        document.getElementById('emailValidateErrorSpan').style.display = 'none';
+        document.getElementById('currentEmailError').style.display = 'none';
         this.setVerificationControlsEnabled(true);
+        this.redirectProfilePath();
     }
 
     // Enable/disable controls in OTP popup

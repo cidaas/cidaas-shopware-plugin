@@ -340,7 +340,7 @@ class CidaasHelperController extends StorefrontController
             } else {
                 error_log("Failed to send OTP for email change to: $email for sub: $sub");
                 $error = $responseData['error'] ?? 'Unknown error';
-                $this->addFlash(self::DANGER, $this->trans('account.errorOccured') . $error);
+                // $this->addFlash(self::DANGER, $this->trans('account.errorOccured') . $error);
             }
 
             return $this->json($res);
@@ -373,7 +373,7 @@ class CidaasHelperController extends StorefrontController
             } else {
                 error_log("2Email change verification failed for email: $email and sub: $sub");
                 $error = $responseData['error'] ?? 'Unknown error';
-                $this->addFlash(self::DANGER, $this->trans('account.errorOccured') . $error);
+                // $this->addFlash(self::DANGER, $this->trans('account.errorOccured') . $error);
             }
 
             return $this->json($res);
