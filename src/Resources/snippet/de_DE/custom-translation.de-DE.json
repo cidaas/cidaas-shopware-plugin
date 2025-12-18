@@ -20,7 +20,10 @@
         "otpVerifyMessage": "Der Bestätigungscode ist falsch.",
         "confirmEmail": "Die Bestätigungs-E-Mail stimmt nicht überein.",
         "emailSameCurrentError": "Bitte geben Sie eine andere E-Mail-Adresse als Ihre aktuelle ein.",
-        "cancelBtnLabel": "Abbrechen"
+        "cancelBtnLabel": "Abbrechen",
+        "otpError10101": "Ungültige Anfrage. Bitte erneut versuchen.",
+        "otpError10104": "E-Mail bereits registriert.",
+        "otpErrorFallback": "Es ist ein Fehler aufgetreten. Bitte erneut versuchen."
     },
 
     "guest_section" : {

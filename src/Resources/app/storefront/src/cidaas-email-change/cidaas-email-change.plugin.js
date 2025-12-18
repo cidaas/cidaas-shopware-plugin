@@ -133,22 +133,34 @@ export default class CidaasEmailChange extends Plugin {
           this.$verifyThing.hide();
           this.$otpApiError.hide();
           this.showVerificationModal();
-        } else {
-          $("#emailValidateErrorSpan")
-            .text(data.error || "An error occurred while sending the verification code.")
-            .show();
-          this.$verifyThing.show();
+          return;
         }
+        const map = window.cidaasOtpErrorTexts || {};
+        const code = String(data.code || "");
+        const fallback =
+          map.fallback || "An error occurred. Please try again.";
+
+        const message =
+          (code && map[code]) ||  // 10101 / 10104 from snippets
+          data.error ||           // backend text if no mapping
+          fallback;               // final fallback
+
+        $("#emailValidateErrorSpan").text(message).show();
+        this.$verifyThing.show();
       },
       () => {
         ElementLoadingIndicatorUtil.remove(this.mailContainer);
-        $("#emailValidateErrorSpan")
-          .text("An error occurred while sending the verification code.")
-          .show();
+
+        const map = window.cidaasOtpErrorTexts || {};
+        const fallback =
+          map.fallback || "An error occurred. Please try again.";
+
+        $("#emailValidateErrorSpan").text(fallback).show();
         this.$verifyThing.show();
       }
     );
   }
+
 
   showVerificationModal() {
     this.$otpApiError.hide();

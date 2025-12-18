@@ -41,7 +41,7 @@
 
                 {# same-as-current email error #}
                 <span id="currentEmailError"
-                      style="font-weight: 400; font-size: 14px; color: #c20017; display: none;">
+                      style="font-weight: 400; font-size: 12px; color: #c20017; display: none;">
                     {{ "account.emailSameCurrentError"|trans|sw_sanitize }}
                 </span>
             </div>
@@ -104,6 +104,13 @@
             <div class="col-12 mt-2">
                 <span id="emailValidateErrorSpan"
                       style="font-weight: 400; font-size: 14px; color: #c20017; display: none;"></span>
+                          <script>
+              window.cidaasOtpErrorTexts = {
+                  "10101": "{{ 'account.otpError10101'|trans|e('js') }}",
+                  "10104": "{{ 'account.otpError10104'|trans|e('js') }}",
+                  "fallback": "{{ 'account.otpErrorFallback'|trans|e('js') }}"
+              };
+    </script>
             </div>
         </div>
 
