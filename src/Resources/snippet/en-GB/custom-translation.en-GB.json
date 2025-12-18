@@ -1,16 +1,29 @@
 {
     "account": {
+        "loginSuccess": "Login successfull.",
+        "loginError": "Error during login/registration! ",
         "confirmChangeLabel" : "Confirm change",
         "confirmChangesMessage" : "Please confirm your changes:",
-        "newEmailLabel":"New email:",
+        "newEmailLabel":"New email address:",
         "confirmBtnLabel": "Confirm",
         "addressSubmit" :"Submit",
+        "updateProfile" :"Successfully updated profile.",
+        "updateProfileError" :"Failed to update profile.",
+        "updateBillingAddress" : "Default billing address updated successfully.",
+        "billingAddressUpdateError": "Failed to update billing address.",
         "errorOccured" : "An error occurred:",
         "verifyemail": "Verify Email",
-        "enterOtpMessage": "Please enter the OTP code that was sent to your new email address.",
-        "otpInvalidMessage": "The OTP code entered is invalid. Please try again.",
-        "otpRequiredMessage": "OTP code is required.",
-        "cancelBtnLabel": "Cancel"
+        "enterVerificationCode": "Enter Verification Code",
+        "enterOtpMessage": "Enter the verification code sent to your email address.",
+        "otpInvalidMessage": "The verification code entered is invalid. Please try again",
+        "otpRequiredMessage": "Verification code is required.",
+        "otpVerifyMessage": "Verification code is incorrect.",
+        "confirmEmail": "Confirmation Email does not match.",
+        "emailSameCurrentError": "Please enter a different email than your current one.",
+        "cancelBtnLabel": "Cancel",
+        "otpError10101": "Invalid request. Please try again.",
+        "otpError10104": "Email already registered.",
+        "otpErrorFallback": "An error occurred. Please try again."
 
 
     },

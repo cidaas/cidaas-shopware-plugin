@@ -471,7 +471,7 @@ use Shopware\Core\Checkout\Customer\SalesChannel\AbstractChangeCustomerProfileRo
             } else {
                 error_log("Failed to send OTP for email change to: $email for sub: $sub");
                 $error = $responseData['error'] ?? 'Unknown error';
-                $this->addFlash(self::DANGER, $this->trans('account.errorOccured') . $error);
+                // $this->addFlash(self::DANGER, $this->trans('account.errorOccured') . $error);
             }
 
             return $this->json($res);
